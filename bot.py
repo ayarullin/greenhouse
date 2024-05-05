@@ -23,7 +23,7 @@ async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("Humidity: %0.1f %%" % sensor.relative_humidity)
     await update.message.reply_text("Analog in 1: %d" % AnalogIn(ads, ads1115.P0).value)
     await update.message.reply_text("Analog in 2: %d" % AnalogIn(ads, ads1115.P1).value)
-    await update.message.reply_text("Analog in 3 (dry control): %d" % AnalogIn(ads, ads1115.P2).value)
+    #await update.message.reply_text("Analog in 3 (dry control): %d" % AnalogIn(ads, ads1115.P2).value)
 
 
 app = Application.builder().token(os.getenv("TELEGRAM_API_KEY")).build()
