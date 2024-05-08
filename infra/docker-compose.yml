@@ -30,11 +30,13 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus:/prometheus
     restart: unless-stopped
+    networks:
+      - monitoring
 
 volumes:
   prometheus:
     external: true
 
 networks:
-  - monitoring:
-      driver: bridge
+  monitoring:
+    driver: bridge
