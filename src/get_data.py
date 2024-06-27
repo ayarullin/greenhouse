@@ -1,4 +1,3 @@
-import time
 from flask import Flask, Response
 from prometheus_client import Gauge, generate_latest
 
@@ -9,11 +8,15 @@ from adafruit_htu21d import HTU21D
 import adafruit_ads1x15.ads1115 as ads1115
 from adafruit_ads1x15.analog_in import AnalogIn
 
+from filelock import FileLock
+
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = HTU21D(i2c)
 ads = ads1115.ADS1115(i2c)
 
 content_type = str('text/plain; version=0.0.4; charset=utf-8')
+
+lock = FileLock("/tmp/i2c.lock")
 
 app = Flask(__name__)
 
@@ -49,19 +52,20 @@ current_solar_state = Gauge(
 
 
 def get_sensors_readings():
-    humidity = format(sensor.relative_humidity, ".2f")
-    temperature = format(sensor.temperature, ".2f")
-    moisture_pot1 = format(AnalogIn(ads, ads1115.P0).value, ".2f")
-    moisture_pot2 = format(AnalogIn(ads, ads1115.P1).value, ".2f")
-    solar_state = format(AnalogIn(ads, ads1115.P2).value, ".2f")
-    response = {
-        "temperature": temperature,
-        "humidity": humidity,
-        "moisture_pot1": moisture_pot1,
-        "moisture_pot2": moisture_pot2,
-        "solar_state": solar_state
-    }
-    return response
+    with lock:
+        humidity = format(sensor.relative_humidity, ".2f")
+        temperature = format(sensor.temperature, ".2f")
+        moisture_pot1 = format(AnalogIn(ads, ads1115.P0).value, ".2f")
+        moisture_pot2 = format(AnalogIn(ads, ads1115.P1).value, ".2f")
+        solar_state = format(AnalogIn(ads, ads1115.P2).value, ".2f")
+        response = {
+            "temperature": temperature,
+            "humidity": humidity,
+            "moisture_pot1": moisture_pot1,
+            "moisture_pot2": moisture_pot2,
+            "solar_state": solar_state
+        }
+        return response
 
 
 @app.route('/metrics')
