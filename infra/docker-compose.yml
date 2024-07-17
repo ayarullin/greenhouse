@@ -32,6 +32,8 @@ services:
     restart: unless-stopped
     networks:
       - monitoring
+    command: >
+      --storage.tsdb.retention.time=1y
 
 volumes:
   prometheus:
