@@ -34,6 +34,8 @@ services:
       - monitoring
     command: >
       --storage.tsdb.retention.time=1y
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus
 
 volumes:
   prometheus:
