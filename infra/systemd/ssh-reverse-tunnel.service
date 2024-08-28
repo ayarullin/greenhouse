@@ -1,0 +1,14 @@
+[Unit]
+Description=SSH Reverse Tunnel
+After=network.target
+
+[Service]
+Type=simple
+User=azat
+ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 5" -o "ServerAliveCountMax 2" -o "ExitOnForwardFailure yes" -N -R 0.0.0.0:2222:127.0.0.1:22 root@azat.tatar
+Restart=always
+RestartSec=3
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

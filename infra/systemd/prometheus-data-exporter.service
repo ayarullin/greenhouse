@@ -1,0 +1,13 @@
+[Unit]
+Description=Telegram bot
+After=network.target
+
+[Service]
+Type=simple
+User=azat
+ExecStart=/home/azat/greenhouse/bin/python /home/azat/greenhouse/src/get_data.py
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
